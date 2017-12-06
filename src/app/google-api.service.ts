@@ -27,10 +27,13 @@ export class GoogleApiService {
       'email'
     ];
 
+    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
     return gapi.client.init({
-      'apiKey': 'Calendar-Manager',
+      'apiKey': '',
       'clientId': '722862170053-1hgmad8kpa7m2mvdmnctne4876fmbg0k.apps.googleusercontent.com',
-      'scope': scopes.join(' ')
+      'scope': scopes.join(' '),
+      'discoveryDocs': DISCOVERY_DOCS
     }).then(() => {
       this.authInstance = gapi.auth2.getAuthInstance();
       // this.authInstance.isSignedIn.listen((status) => this.updateSignInStatus(status));
@@ -65,6 +68,13 @@ export class GoogleApiService {
     }
     // this is little bit lame
     return this.authInstance.currentUser.get().getBasicProfile().getName();
+  }
+
+  getCalendars(): Promise<any[]> {
+    //should check if authorize or sth
+    return gapi.client.calendar.calendarList.list().then((res) => {
+      return res.result.items;
+    });
   }
 
 }

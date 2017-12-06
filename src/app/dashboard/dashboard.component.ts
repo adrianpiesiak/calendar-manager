@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+
+import { GoogleApiService } from './../google-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  calendars: any[];
 
-  constructor() { }
+  constructor(private googleApiService: GoogleApiService, private changeRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.googleApiService.getCalendars().then((calendars) => {
+      this.calendars = calendars;
+      this.changeRef.detectChanges(); //why do I have to use it that often?
+    });
   }
 
 }
